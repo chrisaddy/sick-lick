@@ -1,11 +1,23 @@
 const express = require('express')
+const weather = require('weather-js');
+const compression = require('compression');
+
+
 const app = express()
 
+
 app.get('/', (req, res) => {
+  const cityWeather = weather.find({search: 'Philadelphia, PA', degreeType: 'F'}, function(err, result) {
+    if(err) console.error(err);
+    const city = result[0]
+    console.log(JSON.stringify(city, null, 2));
+    return city
+  });
+
   console.log('[hello-world] root handler called')
   res
     .set('x-powered-by', 'cyclic.sh')
-    .send(`<h1>Hello World!</h1><p>at: ${new Date().toISOString()}</p>`)
+    .send(cityWeather)
     .end()
 })
 
@@ -28,5 +40,8 @@ app.use('*', (req,res) => {
     },null,2))
     .end()
 })
+
+app.use(compression());
+app.use(express.static("public"));
 
 module.exports = app
