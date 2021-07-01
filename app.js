@@ -11,14 +11,14 @@ app.get('/', (req, res) => {
     if(err) console.error(err);
     const city = result[0]
     console.log(JSON.stringify(city, null, 2));
-    return city
+    res
+      .set('x-powered-by', 'cyclic.sh')
+      .send(city)
+      .end()
   });
 
   console.log('[hello-world] root handler called')
-  res
-    .set('x-powered-by', 'cyclic.sh')
-    .send(cityWeather)
-    .end()
+  return cityWeather;
 })
 
 app.use('*', (req,res) => {
